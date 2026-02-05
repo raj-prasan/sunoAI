@@ -49,7 +49,7 @@ export function AnalysisSidebar({
               see
               <br />
             </span>{" "}
-            how you
+            how you are
             <span
               style={{
                 fontFamily: "var(--font-script)",
@@ -57,7 +57,7 @@ export function AnalysisSidebar({
               }}
             >
               {" "}
-              feel today.
+              feeling
             </span>
           </h3>
         </div>

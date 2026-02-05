@@ -3,14 +3,28 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { JournalEditorProps, EmotionResult } from "./types";
+import { JournalEditorProps, EmotionResult, JournalEntry } from "./types";
 import { MIN_CHARS_FOR_ANALYSIS, DEBOUNCE_DELAY } from "./constants";
 import { JournalInput } from "./JournalInput";
 import { AnalysisSidebar } from "./AnalysisSidebar";
 import { MobileEmotionResults } from "./MobileEmotionResults";
+import { JournalTabs } from "./JournalTabs";
+import { EmotionReport } from "./EmotionReport";
 import storeJournal from "@/hooks/storeJournal";
 
 export default function JournalEditor({ sessionId }: JournalEditorProps) {
+  // Multi-journal state
+  const [journals, setJournals] = useState<JournalEntry[]>([
+    {
+      text: "",
+      emotions: undefined,
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+    },
+  ]);
+  const [currentJournalIndex, setCurrentJournalIndex] = useState(0);
+
+  // Current journal state
   const [journalText, setJournalText] = useState("");
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [emotions, setEmotions] = useState<EmotionResult[] | null>(null);
@@ -20,6 +34,70 @@ export default function JournalEditor({ sessionId }: JournalEditorProps) {
   const lastAnalyzedText = useRef<string>("");
   // Debounce timer ref
   const debounceTimer = useRef<NodeJS.Timeout | null>(null);
+
+  // Load current journal when index changes
+  useEffect(() => {
+    const currentJournal = journals[currentJournalIndex];
+    if (currentJournal) {
+      setJournalText(currentJournal.text);
+      setEmotions(currentJournal.emotions || null);
+      lastAnalyzedText.current = currentJournal.text;
+    }
+  }, [currentJournalIndex, journals]);
+
+  // Save current journal to state
+  const saveCurrentJournal = useCallback(() => {
+    setJournals((prev) => {
+      const updated = [...prev];
+      updated[currentJournalIndex] = {
+        ...updated[currentJournalIndex],
+        text: journalText,
+        emotions: emotions || undefined,
+        updatedAt: Date.now(),
+      };
+      return updated;
+    });
+  }, [currentJournalIndex, journalText, emotions]);
+
+  // Auto-save when switching journals
+  const handleTabClick = async (index: number) => {
+    if (index === currentJournalIndex) return;
+
+    // Save current journal before switching
+    saveCurrentJournal();
+
+    // Save to database
+    if (journalText.trim()) {
+      await storeJournal(
+        sessionId,
+        currentJournalIndex,
+        journalText,
+        emotions || undefined,
+      );
+    }
+
+    setCurrentJournalIndex(index);
+  };
+
+  // Create new journal
+  const handleNewJournal = () => {
+    // Save current journal first
+    saveCurrentJournal();
+
+    const newJournal: JournalEntry = {
+      text: "",
+      emotions: undefined,
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+    };
+
+    setJournals((prev) => [...prev, newJournal]);
+    setCurrentJournalIndex(journals.length);
+    setJournalText("");
+    setEmotions(null);
+    setError(null);
+    lastAnalyzedText.current = "";
+  };
 
   // Memoized analyze function that can be called with specific text
   const analyzeText = useCallback(
@@ -44,7 +122,13 @@ export default function JournalEditor({ sessionId }: JournalEditorProps) {
         if (data.success) {
           setEmotions(data.emotions);
           lastAnalyzedText.current = text;
-          await storeJournal(sessionId, text);
+          // Save to database with emotions
+          await storeJournal(
+            sessionId,
+            currentJournalIndex,
+            text,
+            data.emotions,
+          );
         } else {
           setError(data.error || "Analysis failed");
         }
@@ -54,7 +138,7 @@ export default function JournalEditor({ sessionId }: JournalEditorProps) {
         setIsAnalyzing(false);
       }
     },
-    [sessionId],
+    [sessionId, currentJournalIndex],
   );
 
   // Debounced auto-analysis effect
@@ -97,6 +181,13 @@ export default function JournalEditor({ sessionId }: JournalEditorProps) {
 
       if (data.success) {
         setEmotions(data.emotions);
+        // Save to database with emotions
+        await storeJournal(
+          sessionId,
+          currentJournalIndex,
+          journalText,
+          data.emotions,
+        );
       } else {
         setError(data.error || "Analysis failed");
       }
@@ -187,7 +278,17 @@ export default function JournalEditor({ sessionId }: JournalEditorProps) {
           </p>
         </div>
 
-        {/* Main Layout: Journal Card + Right Sidebar */}
+        {/* Journal Tabs */}
+        <JournalTabs
+          journals={journals}
+          currentIndex={currentJournalIndex}
+          onTabClick={handleTabClick}
+          onNewJournal={handleNewJournal}
+        />
+
+        {/* Emotion Analytics Report */}
+        <EmotionReport journals={journals} />
+
         <div className="flex gap-8 items-start">
           <JournalInput
             journalText={journalText}
@@ -205,10 +306,7 @@ export default function JournalEditor({ sessionId }: JournalEditorProps) {
           />
         </div>
 
-        {/* Mobile Results - Shows below on smaller screens */}
         {emotions && <MobileEmotionResults emotions={emotions} />}
-
-        {/* Floating Tags */}
         <div
           className="absolute top-32 right-8 pill-tag float hidden xl:block"
           style={{
