@@ -28,3 +28,15 @@ export const getSession = query({
     return session;
   },
 });
+export const storeJournal = mutation({
+  args: { sessionId: v.id("sessions"), journalText: v.string() },
+  handler: async (ctx, args) => {
+    const session = await ctx.db.get(args.sessionId);
+    if (!session) {
+      throw new ConvexError("Session not found");
+    }
+    await ctx.db.patch(args.sessionId, {
+      messages: [...(session.messages ?? []), args.journalText],
+    });
+  },
+});
