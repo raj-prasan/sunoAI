@@ -5,6 +5,7 @@ import About from "./About";
 import Features from "./Features";
 import Blog from "./Blog";
 import Footer from "./Footer";
+import Steps from "./Steps";
 export default function Home() {
   return (
     <div className="min-h-screen bg-white">
@@ -12,6 +13,7 @@ export default function Home() {
       <Hero/>
       <About/>
       <Features/>
+      <Steps/>
       <Blog/>
       <Footer/>
     </div>

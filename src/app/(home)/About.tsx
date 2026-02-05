@@ -46,83 +46,19 @@ export default function About() {
         </div>
 
         {/* Team Members */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
-          <div className="text-center">
-            <div
-              className="w-28 h-28 mx-auto circle-frame mb-3"
-              style={{
-                background: "linear-gradient(135deg, #FCD34D 0%, #FBBF24 100%)",
-              }}
-            >
-              <div className="w-full h-full flex items-center justify-center text-4xl">
-                👨‍🏫
-              </div>
-            </div>
-            <h4
-              className="text-white font-bold mb-1"
-              style={{ fontFamily: "var(--font-heading)" }}
-            >
-              Kratos Watson
-            </h4>
-            <p className="text-purple-200 text-sm">Creative Director</p>
-          </div>
-          <div className="text-center">
-            <div
-              className="w-28 h-28 mx-auto circle-frame mb-3"
-              style={{
-                background: "linear-gradient(135deg, #A78BFA 0%, #7C3AED 100%)",
-              }}
-            >
-              <div className="w-full h-full flex items-center justify-center text-4xl">
-                👩‍🏫
-              </div>
-            </div>
-            <h4
-              className="text-white font-bold mb-1"
-              style={{ fontFamily: "var(--font-heading)" }}
-            >
-              Annie Wilson
-            </h4>
-            <p className="text-purple-200 text-sm">Growing Teacher</p>
-          </div>
-          <div className="text-center">
-            <div
-              className="w-28 h-28 mx-auto circle-frame mb-3"
-              style={{
-                background: "linear-gradient(135deg, #FBBF24 0%, #F59E0B 100%)",
-              }}
-            >
-              <div className="w-full h-full flex items-center justify-center text-4xl">
-                👨‍💻
-              </div>
-            </div>
-            <h4
-              className="text-white font-bold mb-1"
-              style={{ fontFamily: "var(--font-heading)" }}
-            >
-              Jacob Jones
-            </h4>
-            <p className="text-purple-200 text-sm">Math Wizard</p>
-          </div>
-          <div className="text-center">
-            <div
-              className="w-28 h-28 mx-auto circle-frame mb-3"
-              style={{
-                background: "linear-gradient(135deg, #7C3AED 0%, #5B21B6 100%)",
-              }}
-            >
-              <div className="w-full h-full flex items-center justify-center text-4xl">
-                👩‍🎨
-              </div>
-            </div>
-            <h4
-              className="text-white font-bold mb-1"
-              style={{ fontFamily: "var(--font-heading)" }}
-            >
-              Savannah Nguyen
-            </h4>
-            <p className="text-purple-200 text-sm">Reading Teacher</p>
-          </div>
+        <div className="max-w-4xl mx-auto" style={{fontFamily: "var(--font-body)"}}>
+          <p className="text-white">
+            This tool offers general mental well-being insights based on your writing. It is not a diagnosis or medical advice. If you feel distressed, consider reaching out to someone you trust or a qualified mental health professional.
+          </p>
+          <p className="text-white"  style={{fontFamily: "var(--font-body)"}}>
+            This platform is not a crisis service. For immediate help in India, contact:<br/>
+            <span className="font-bold">Kiran: 1800-599-0019 <br/> AASRA: +91-9820466726 <br/> Emergency: 112</span>
+          </p>
+
+          <p className="text-white"  style={{fontFamily: "var(--font-body)"}}>
+              We do not store personal reflections and cannot provide direct intervention. This tool supports awareness only and does not replace professional care.
+          </p>
+
         </div>
       </div>
     </section>

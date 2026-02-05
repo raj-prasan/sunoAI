@@ -1,5 +1,5 @@
 import { ButtonColorful } from "@/components/ui/button-colorful";
-
+import createSession from "../../hooks/createSession";
 export default function Hero() {
   return (
     <section
@@ -58,7 +58,10 @@ export default function Hero() {
 
             {/* CTA Button */}
             <div>
-              <ButtonColorful label="Enter your private space"/>
+              <ButtonColorful
+                label="Enter your private space"
+                onClick={createSession}
+              />
             </div>
           </div>
 

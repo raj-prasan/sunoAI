@@ -6,5 +6,6 @@ export default defineSchema({
     isActive: v.boolean(),
     messages: v.optional(v.array(v.string())),
     createdBy: v.string(),
+    expiresAt: v.number(),
   }),
 });
