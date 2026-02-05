@@ -1,5 +1,5 @@
-
-
+import Image from "next/image";
+import Link from "next/link";
 export default function Footer() {
   return (
     <footer
@@ -9,24 +9,15 @@ export default function Footer() {
         <div className="max-w-7xl mx-auto">
           <div className="grid md:grid-cols-4 gap-8 mb-8">
             <div>
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center">
-                  <span
-                    className="font-bold text-xl"
-                    style={{ color: "var(--primary-purple)" }}
-                  >
-                    W
-                  </span>
-                </div>
-                <span
-                  className="text-2xl font-bold text-white"
-                  style={{ fontFamily: "var(--font-heading)" }}
-                >
-                  WonderKids
-                </span>
+              <div className="flex items-center gap-3">
+              <div>
+                <Link href={"/"}>
+                  <Image src="sunoAI.svg" alt="logo" width={110} height={80} />
+                </Link>
               </div>
+            </div>
               <p className="text-purple-200 text-sm">
-                Making learning fun and engaging for every child.
+                Awareness, not diagnosis. Support, not surveillance
               </p>
             </div>
             <div>
@@ -133,7 +124,7 @@ export default function Footer() {
             </div>
           </div>
           <div className="border-t border-purple-600 pt-8 text-center text-purple-200 text-sm">
-            © 2026 WonderKids. All rights reserved.
+            © 2026 SunoAI. All rights reserved.
           </div>
         </div>
       </footer>

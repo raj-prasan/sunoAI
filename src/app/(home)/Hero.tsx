@@ -58,7 +58,7 @@ export default function Hero() {
 
             {/* CTA Button */}
             <div>
-              <ButtonColorful label="Get Started"/>
+              <ButtonColorful label="Enter your private space"/>
             </div>
           </div>
 
