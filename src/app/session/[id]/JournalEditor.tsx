@@ -1,5 +1,4 @@
 "use client";
-
 import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
@@ -11,9 +10,9 @@ import { MobileEmotionResults } from "./MobileEmotionResults";
 import { JournalTabs } from "./JournalTabs";
 import { EmotionReport } from "./EmotionReport";
 import storeJournal from "@/hooks/storeJournal";
+import getSessionWithJournals from "@/hooks/getJournal";
 
 export default function JournalEditor({ sessionId }: JournalEditorProps) {
-  // Multi-journal state
   const [journals, setJournals] = useState<JournalEntry[]>([
     {
       text: "",
@@ -24,18 +23,13 @@ export default function JournalEditor({ sessionId }: JournalEditorProps) {
   ]);
   const [currentJournalIndex, setCurrentJournalIndex] = useState(0);
 
-  // Current journal state
   const [journalText, setJournalText] = useState("");
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [emotions, setEmotions] = useState<EmotionResult[] | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  // Track last analyzed text to avoid redundant API calls
   const lastAnalyzedText = useRef<string>("");
-  // Debounce timer ref
   const debounceTimer = useRef<NodeJS.Timeout | null>(null);
-
-  // Load current journal when index changes
   useEffect(() => {
     const currentJournal = journals[currentJournalIndex];
     if (currentJournal) {
@@ -45,6 +39,13 @@ export default function JournalEditor({ sessionId }: JournalEditorProps) {
     }
   }, [currentJournalIndex, journals]);
 
+  const getJournalTextFromDataBase = async()=>{
+    const journals = await getSessionWithJournals(sessionId);
+    setJournals(journals);
+  }
+  useEffect(() => {
+    getJournalTextFromDataBase();
+  }, []);
   // Save current journal to state
   const saveCurrentJournal = useCallback(() => {
     setJournals((prev) => {
@@ -99,12 +100,10 @@ export default function JournalEditor({ sessionId }: JournalEditorProps) {
     lastAnalyzedText.current = "";
   };
 
-  // Memoized analyze function that can be called with specific text
   const analyzeText = useCallback(
     async (text: string) => {
       if (!text.trim() || text.length < MIN_CHARS_FOR_ANALYSIS) return;
 
-      // Don't re-analyze the same text
       if (text === lastAnalyzedText.current) return;
 
       setIsAnalyzing(true);
@@ -122,7 +121,6 @@ export default function JournalEditor({ sessionId }: JournalEditorProps) {
         if (data.success) {
           setEmotions(data.emotions);
           lastAnalyzedText.current = text;
-          // Save to database with emotions
           await storeJournal(
             sessionId,
             currentJournalIndex,
@@ -141,21 +139,16 @@ export default function JournalEditor({ sessionId }: JournalEditorProps) {
     [sessionId, currentJournalIndex],
   );
 
-  // Debounced auto-analysis effect
   useEffect(() => {
-    // Clear existing timer
     if (debounceTimer.current) {
       clearTimeout(debounceTimer.current);
     }
-
-    // Only set timer if there's enough text
     if (journalText.length >= MIN_CHARS_FOR_ANALYSIS) {
       debounceTimer.current = setTimeout(() => {
         analyzeText(journalText);
       }, DEBOUNCE_DELAY);
     }
 
-    // Cleanup on unmount or text change
     return () => {
       if (debounceTimer.current) {
         clearTimeout(debounceTimer.current);
@@ -163,7 +156,6 @@ export default function JournalEditor({ sessionId }: JournalEditorProps) {
     };
   }, [journalText, analyzeText]);
 
-  // Manual analyze function (for button click)
   const analyzeEmotions = async () => {
     if (!journalText.trim()) return;
 
@@ -181,7 +173,6 @@ export default function JournalEditor({ sessionId }: JournalEditorProps) {
 
       if (data.success) {
         setEmotions(data.emotions);
-        // Save to database with emotions
         await storeJournal(
           sessionId,
           currentJournalIndex,
@@ -198,14 +189,14 @@ export default function JournalEditor({ sessionId }: JournalEditorProps) {
     }
   };
 
-  // Get current date formatted
+
   const today = new Date();
   const formattedDate = today.toLocaleDateString("en-US", {
     day: "numeric",
     month: "long",
     year: "numeric",
   });
-
+  
   return (
     <div
       className="min-h-screen relative overflow-hidden"

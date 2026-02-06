@@ -11,8 +11,6 @@ import {
   Smile,
   SmileIcon,
 } from "lucide-react";
-import { EmotionResult, JournalEntry } from "./types";
-import { emotionConfig } from "./constants";
 import {
   Dialog,
   DialogContent,
@@ -21,7 +19,8 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-
+import { EmotionResult, JournalEntry } from "./types";
+import { emotionConfig } from "./constants";
 interface EmotionReport {
   totalJournals: number;
   analyzedJournals: number;
