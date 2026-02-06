@@ -1,5 +1,6 @@
 import { mutation, query } from "./_generated/server";
 import { ConvexError, v } from "convex/values";
+import { encrypt, decrypt } from "./util/encryption";
 
 export const createSession = mutation({
   args: { Id: v.string() },
@@ -25,9 +26,21 @@ export const getSession = query({
     if (!session) {
       return null;
     }
+
+    // Decrypt journals if present
+    if (session.journals) {
+      session.journals = await Promise.all(
+        session.journals.map(async (journal) => ({
+          ...journal,
+          text: await decrypt(journal.text),
+        })),
+      );
+    }
+
     return session;
   },
 });
+
 export const storeJournal = mutation({
   args: {
     sessionId: v.id("sessions"),
@@ -51,11 +64,14 @@ export const storeJournal = mutation({
     const journals = session.journals ?? [];
     const now = Date.now();
 
+    // Encrypt the journal text
+    const encryptedText = await encrypt(args.journalText);
+
     // Update existing journal or create new one
     if (args.journalIndex < journals.length) {
       // Update existing journal
       journals[args.journalIndex] = {
-        text: args.journalText,
+        text: encryptedText,
         emotions: args.emotions,
         createdAt: journals[args.journalIndex].createdAt,
         updatedAt: now,
@@ -63,7 +79,7 @@ export const storeJournal = mutation({
     } else {
       // Create new journal
       journals.push({
-        text: args.journalText,
+        text: encryptedText,
         emotions: args.emotions,
         createdAt: now,
         updatedAt: now,
@@ -74,7 +90,16 @@ export const storeJournal = mutation({
       journals,
     });
 
-    return journals;
+    // We can return the encrypted journals (or decrypt them if the client expects plain text immediately)
+    // For consistency with specific queries, let's return them decrypted so the UI updates correctly without reload
+    const decryptedJournals = await Promise.all(
+      journals.map(async (journal) => ({
+        ...journal,
+        text: await decrypt(journal.text),
+      })),
+    );
+
+    return decryptedJournals;
   },
 });
 
@@ -85,6 +110,17 @@ export const getSessionWithJournals = query({
     if (!session) {
       return null;
     }
+
+    // Decrypt journals if present
+    if (session.journals) {
+      session.journals = await Promise.all(
+        session.journals.map(async (journal) => ({
+          ...journal,
+          text: await decrypt(journal.text),
+        })),
+      );
+    }
+
     return session;
   },
 });

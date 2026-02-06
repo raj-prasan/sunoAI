@@ -68,7 +68,7 @@ export default function FloatingChatButton({
       {/* Floating Chat Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-6 right-6 z-50 w-14 h-14 bg-blue-500 hover:bg-blue-600 text-white rounded-full shadow-lg flex items-center justify-center transition-all duration-300 hover:scale-110"
+        className="fixed bottom-6 right-6 z-50 w-14 h-14 bg-[#FCD34D] hover:bg-[#FBBF24] text-white rounded-full shadow-lg flex items-center justify-center transition-all duration-300 hover:scale-110"
         aria-label={isOpen ? "Close chat" : "Open chat"}
       >
         {isOpen ? (
