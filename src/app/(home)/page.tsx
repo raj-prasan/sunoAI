@@ -17,7 +17,7 @@ export default function Home() {
       <Steps/>
       <Blog/>
       <Footer/>
-      <FloatingChatButton userId="SUNO AI" userAvatar="https://res.cloudinary.com/dby6qs2rb/image/upload/v1770360777/output-onlinepngtools_q6qbpp.png" />
+      <FloatingChatButton  userId="SUNO AI" userAvatar="https://res.cloudinary.com/dby6qs2rb/image/upload/v1770360777/output-onlinepngtools_q6qbpp.png" />
     </div>
   );
 }

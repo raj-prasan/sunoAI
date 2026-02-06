@@ -1,5 +1,3 @@
-import { v } from "convex/values";
-
 const ALGORITHM = "AES-GCM";
 const KEY_LENGTH = 256;
 
