@@ -2,7 +2,7 @@
 import { Component } from "@/components/loding";
 import { EmotionResult } from "./types";
 import { emotionConfig } from "./constants";
-import storeJournal from "@/hooks/storeJournal";
+
 interface AnalysisSidebarProps {
   isAnalyzing: boolean;
   emotions: EmotionResult[] | null;

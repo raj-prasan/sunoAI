@@ -12,7 +12,7 @@ export default function Footer() {
               <div className="flex items-center gap-3">
               <div>
                 <Link href={"/"}>
-                  <Image src="sunoAI.svg" alt="logo" width={110} height={80} />
+                  <Image src="/sunoAI.svg" alt="logo" width={110} height={80} />
                 </Link>
               </div>
             </div>

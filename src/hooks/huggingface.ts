@@ -9,4 +9,14 @@ const emotionClassifier = async (text: string) => {
   });
   return output;
 };
-export default emotionClassifier;
+
+
+const sentimentAnalysis = async (text: string) => {
+  const output = await client.textClassification({
+    model: "SamLowe/roberta-base-go_emotions",
+    inputs: text,
+    provider: "hf-inference",
+  });
+  return output;
+};
+export{emotionClassifier, sentimentAnalysis}

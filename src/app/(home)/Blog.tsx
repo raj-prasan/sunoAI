@@ -1,3 +1,4 @@
+import Image from "next/image";
 
 
 export default function Blog() {
@@ -35,17 +36,12 @@ export default function Blog() {
           <div className="grid md:grid-cols-3 gap-8">
             {/* Blog Post 1 */}
             <div className="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300">
-              <div
-                className="h-48"
-                style={{
-                  background:
-                    "linear-gradient(135deg, #DDD6FE 0%, #A78BFA 100%)",
-                }}
-              >
-                <div className="w-full h-full flex items-center justify-center text-6xl">
-                  📖
-                </div>
-              </div>
+              <Image
+                src="/blog1.png"
+                alt="Blog Post 1"
+                width={500}
+                height={300}
+              />
               <div className="p-6">
                 <h3
                   className="text-xl font-bold mb-2"
@@ -54,14 +50,15 @@ export default function Blog() {
                     color: "var(--text-dark)",
                   }}
                 >
-                  Learning with Games? Why not?
+                  Why sadness doesn’t always mean depression
                 </h3>
                 <p
                   className="text-sm mb-4"
                   style={{ color: "var(--text-dark)", opacity: 0.7 }}
                 >
-                  Explore fun games that boost learning and keep kids engaged.
+                  Why It Matters & How to Tell Them Apart
                 </p>
+                <a href="https://blog.opencounseling.com/depression-vs-sadness/" target="_blank" rel="noopener noreferrer">
                 <button
                   className="flex items-center gap-2 font-semibold"
                   style={{ color: "var(--primary-purple)" }}
@@ -81,22 +78,18 @@ export default function Blog() {
                     />
                   </svg>
                 </button>
+                </a>
               </div>
             </div>
 
             {/* Blog Post 2 */}
             <div className="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300">
-              <div
-                className="h-48"
-                style={{
-                  background:
-                    "linear-gradient(135deg, #FCD34D 0%, #FBBF24 100%)",
-                }}
-              >
-                <div className="w-full h-full flex items-center justify-center text-6xl">
-                  🎨
-                </div>
-              </div>
+              <Image
+                src="/blog2.webp"
+                alt="Blog Post 1"
+                width={500}
+                height={300}
+              />
               <div className="p-6">
                 <h3
                   className="text-xl font-bold mb-2"
@@ -105,14 +98,15 @@ export default function Blog() {
                     color: "var(--text-dark)",
                   }}
                 >
-                  10 Learning Game Ideas
+                  Social media and comparison fatigue
                 </h3>
                 <p
                   className="text-sm mb-4"
                   style={{ color: "var(--text-dark)", opacity: 0.7 }}
                 >
-                  Discover fun and educational activities for your kids.
+                  Signs, Symptoms, and How to Overcome It
                 </p>
+                <a href="https://medium.com/@mariaisquixotic/social-media-fatigue-signs-symptoms-and-how-to-overcome-it-4e91eb80a642" target="_blank" rel="noopener noreferrer">
                 <button
                   className="flex items-center gap-2 font-semibold"
                   style={{ color: "var(--primary-purple)" }}
@@ -132,22 +126,18 @@ export default function Blog() {
                     />
                   </svg>
                 </button>
+                </a>
               </div>
             </div>
 
             {/* Blog Post 3 */}
             <div className="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300">
-              <div
-                className="h-48"
-                style={{
-                  background:
-                    "linear-gradient(135deg, #A78BFA 0%, #7C3AED 100%)",
-                }}
-              >
-                <div className="w-full h-full flex items-center justify-center text-6xl">
-                  🎯
-                </div>
-              </div>
+              <Image
+                src="/blog3.webp"
+                alt="Blog Post 1"
+                width={500}
+                height={300}
+              />
               <div className="p-6">
                 <h3
                   className="text-xl font-bold mb-2"
@@ -156,14 +146,15 @@ export default function Blog() {
                     color: "var(--text-dark)",
                   }}
                 >
-                  Fun Activities for Kids
+                  When should you seek professional help?
                 </h3>
                 <p
                   className="text-sm mb-4"
                   style={{ color: "var(--text-dark)", opacity: 0.7 }}
                 >
-                  Learn how to keep kids active and happy with these ideas.
+                  Why is it important to seek help?
                 </p>
+                <a href="https://mpowerminds.com/blog/When-is-the-right-time-to-seek-help-Why-is-it-important-to-seek-help#:~:text=The%20American%20Psychological%20Association%20suggests,ourselves%20or%20others%20in%20anyway">
                 <button
                   className="flex items-center gap-2 font-semibold"
                   style={{ color: "var(--primary-purple)" }}
@@ -183,6 +174,7 @@ export default function Blog() {
                     />
                   </svg>
                 </button>
+                </a>
               </div>
             </div>
           </div>

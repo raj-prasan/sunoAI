@@ -11,6 +11,7 @@ import { JournalTabs } from "./JournalTabs";
 import { EmotionReport } from "./EmotionReport";
 import storeJournal from "@/hooks/storeJournal";
 import getSessionWithJournals from "@/hooks/getJournal";
+import MoodFace from "@/components/MoodFace";
 
 export default function JournalEditor({ sessionId }: JournalEditorProps) {
   const [journals, setJournals] = useState<JournalEntry[]>([
@@ -25,11 +26,15 @@ export default function JournalEditor({ sessionId }: JournalEditorProps) {
 
   const [journalText, setJournalText] = useState("");
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [isAnalyzingMood, setIsAnalyzingMood] = useState(false);
   const [emotions, setEmotions] = useState<EmotionResult[] | null>(null);
+  const [mood, setMood] = useState<number>(50);
   const [error, setError] = useState<string | null>(null);
 
   const lastAnalyzedText = useRef<string>("");
+  const lastAnalyzedMoodText = useRef<string>("");
   const debounceTimer = useRef<NodeJS.Timeout | null>(null);
+  const moodDebounceTimer = useRef<NodeJS.Timeout | null>(null);
   useEffect(() => {
     const currentJournal = journals[currentJournalIndex];
     if (currentJournal) {
@@ -39,10 +44,10 @@ export default function JournalEditor({ sessionId }: JournalEditorProps) {
     }
   }, [currentJournalIndex, journals]);
 
-  const getJournalTextFromDataBase = async()=>{
+  const getJournalTextFromDataBase = async () => {
     const journals = await getSessionWithJournals(sessionId);
     setJournals(journals);
-  }
+  };
   useEffect(() => {
     getJournalTextFromDataBase();
   }, []);
@@ -139,6 +144,36 @@ export default function JournalEditor({ sessionId }: JournalEditorProps) {
     [sessionId, currentJournalIndex],
   );
 
+  const analyzeMood = useCallback(async (text: string) => {
+    if (!text.trim() || text.length < MIN_CHARS_FOR_ANALYSIS) return;
+
+    if (text === lastAnalyzedMoodText.current) return;
+
+    setIsAnalyzingMood(true);
+
+    try {
+      const response = await fetch("/api/sentiment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setMood(data.emotions);
+        lastAnalyzedMoodText.current = text;
+      } else {
+        console.error("Mood analysis failed:", data.error);
+      }
+    } catch (err) {
+      console.error("Failed to analyze mood:", err);
+    } finally {
+      setIsAnalyzingMood(false);
+    }
+  }, []);
+
+  // Debounced emotion analysis
   useEffect(() => {
     if (debounceTimer.current) {
       clearTimeout(debounceTimer.current);
@@ -155,6 +190,24 @@ export default function JournalEditor({ sessionId }: JournalEditorProps) {
       }
     };
   }, [journalText, analyzeText]);
+
+  // Debounced mood analysis (independent from emotion analysis)
+  useEffect(() => {
+    if (moodDebounceTimer.current) {
+      clearTimeout(moodDebounceTimer.current);
+    }
+    if (journalText.length >= MIN_CHARS_FOR_ANALYSIS) {
+      moodDebounceTimer.current = setTimeout(() => {
+        analyzeMood(journalText);
+      }, DEBOUNCE_DELAY);
+    }
+
+    return () => {
+      if (moodDebounceTimer.current) {
+        clearTimeout(moodDebounceTimer.current);
+      }
+    };
+  }, [journalText, analyzeMood]);
 
   const analyzeEmotions = async () => {
     if (!journalText.trim()) return;
@@ -189,21 +242,51 @@ export default function JournalEditor({ sessionId }: JournalEditorProps) {
     }
   };
 
-
   const today = new Date();
   const formattedDate = today.toLocaleDateString("en-US", {
     day: "numeric",
     month: "long",
     year: "numeric",
   });
-  
+
   return (
     <div
       className="min-h-screen relative overflow-hidden"
       style={{ background: "var(--bg-lavender)" }}
     >
-      {/* Decorative Blobs */}
+
       <div className="absolute top-20 left-10 w-64 h-64 blob-purple opacity-20 float"></div>
+
+      <div className="absolute top-90 left-20 opacity-100 float">
+        <div className="relative">
+          {isAnalyzingMood ? (
+            <span className="text-xs">Analyzing mood...</span>
+          ) : (
+            <>
+            <MoodFace value={mood} />
+            <p className="text-xl font-semibold whitespace-nowrap"
+              style={{
+                fontFamily: "var(--font-script)",
+                color: "var(--secondary-yellow)",
+              }}>
+              Mood Score : {mood}
+            </p>
+            </>
+          )}
+          <div className="absolute -bottom-8 -right-3 flex items-center gap-2">
+            <p
+              className="text-3xl font-semibold whitespace-nowrap"
+              style={{
+                fontFamily: "var(--font-script)",
+                color: "var(--primary-purple)",
+              }}
+            >
+              Your current mood
+            </p>
+          </div>
+        </div>
+      </div>
+
       <div className="absolute top-40 right-20 w-48 h-48 blob-yellow opacity-30 float-delayed"></div>
       <div className="absolute bottom-20 left-1/4 w-56 h-56 blob-lavender opacity-40 float"></div>
       <div className="absolute bottom-40 right-10 w-40 h-40 blob-purple opacity-15 float-delayed"></div>

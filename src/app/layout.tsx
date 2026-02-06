@@ -33,6 +33,7 @@ export default function RootLayout({
           <ConvexClientProvider>{children}</ConvexClientProvider>
         </NuqsAdapter>
       </body>
+      
     </html>
   );
 }

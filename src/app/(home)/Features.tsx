@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import createSession from "@/hooks/createSession";
 
 interface ServiceCard {
   title: string;
@@ -91,8 +92,9 @@ const ServiceCardComponent = ({ card }: { card: ServiceCard }) => {
         </div>
 
         {/* CTA Link */}
-        <Link
-          href={card.link}
+        
+        <button
+          onClick={()=>{createSession()}}
           className="inline-flex items-center gap-2 font-semibold text-sm transition-all duration-300"
           style={{
             color: "var(--primary-purple)",
@@ -115,7 +117,7 @@ const ServiceCardComponent = ({ card }: { card: ServiceCard }) => {
               d="M17 8l4 4m0 0l-4 4m4-4H3"
             />
           </svg>
-        </Link>
+        </button>
       </div>
     </div>
   );
