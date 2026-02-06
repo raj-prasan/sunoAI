@@ -249,12 +249,22 @@ export default function JournalEditor({ sessionId }: JournalEditorProps) {
     year: "numeric",
   });
 
+  const handleDownload = () => {
+    if (!journalText.trim()) return;
+    const element = document.createElement("a");
+    const file = new Blob([journalText], { type: "text/plain" });
+    element.href = URL.createObjectURL(file);
+    element.download = `SunoAI-Journal-${formattedDate}.txt`;
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+  };
+
   return (
     <div
       className="min-h-screen relative overflow-hidden"
       style={{ background: "var(--bg-lavender)" }}
     >
-
       <div className="absolute top-20 left-10 w-64 h-64 blob-purple opacity-20 float"></div>
 
       <div className="absolute top-90 left-20 opacity-100 float">
@@ -263,14 +273,16 @@ export default function JournalEditor({ sessionId }: JournalEditorProps) {
             <span className="text-xs">Analyzing mood...</span>
           ) : (
             <>
-            <MoodFace value={mood} />
-            <p className="text-xl font-semibold whitespace-nowrap"
-              style={{
-                fontFamily: "var(--font-script)",
-                color: "var(--secondary-yellow)",
-              }}>
-              Mood Score : {mood}
-            </p>
+              <MoodFace value={mood} />
+              <p
+                className="text-xl font-semibold whitespace-nowrap"
+                style={{
+                  fontFamily: "var(--font-script)",
+                  color: "var(--secondary-yellow)",
+                }}
+              >
+                Mood Score : {mood}
+              </p>
             </>
           )}
           <div className="absolute -bottom-8 -right-3 flex items-center gap-2">
@@ -369,6 +381,7 @@ export default function JournalEditor({ sessionId }: JournalEditorProps) {
             setJournalText={setJournalText}
             isAnalyzing={isAnalyzing}
             analyzeEmotions={analyzeEmotions}
+            onDownload={handleDownload}
             formattedDate={formattedDate}
           />
 

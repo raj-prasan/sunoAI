@@ -6,7 +6,6 @@ export default function About() {
       style={{ background: "var(--primary-purple)" }}
     >
       <div className="max-w-6xl mx-auto relative z-10">
-        {/* Decorative yellow blob */}
         <div className="absolute -top-10 -left-10 w-40 h-40 blob-yellow opacity-40"></div>
 
         <div className="text-center mb-16">
