@@ -1,6 +1,6 @@
 
 # Suno AI - Mental Health Companion 
-## Live Demo - https://www.sunoai-gamma.vercel.app
+## Live Demo - [https://www.sunoai-gamma.vercel.app](https://sunoai-gamma.vercel.app/)
 
 > A secure, AI-powered journaling platform designed to help you understand your thoughts and improve mental well-being.
 
@@ -119,4 +119,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ---
 
 _Note: This is a mental health support tool, not a medical device. If you are in crisis, please contact local emergency services._
+
 
