@@ -1,6 +1,6 @@
 
 # Suno AI - Mental Health Companion 
-## Live Demo - [`https://sunoai.vercel.tech`](https://sunoai.prasan.tech/)
+## Live Demo - [`sunoai.prasan.tech`](https://sunoai.prasan.tech/)
 
 > A secure, AI-powered journaling platform designed to help you understand your thoughts and improve mental well-being.
 
